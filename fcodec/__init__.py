@@ -78,7 +78,6 @@ def f_string_decode(input, errors='strict', final=False):
         elif begun:
             if saml.startswith(F_STR_END):
                 pos = ln.index(F_STR_END) + len(F_STR_END)
-                back = result.rstrip(' \t')
 #               -- escape the latest line break
                 result += '\n' if result.rstrip(' \t').endswith('\\') else '\\\n'
                 result += ln[ :pos] + F_STR_TAIL + ln[pos: ] + '\n'
