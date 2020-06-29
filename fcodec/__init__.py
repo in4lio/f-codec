@@ -18,10 +18,12 @@ else:
     f'''
 The sunset for Python 2 has passed.
 '''
+
 f''''''
+
 f'''
 Godspeed!
-'''
+''' > ' ' * 8
 """
 
 import codecs
@@ -30,11 +32,15 @@ from encodings import utf_8
 CODEC_NAME  = 'f'
 
 #   ---------------------------------------------------------------------------
-F_STR_BEGIN   = "f'''"
-F_STR_END     = "'''"
-F_STR_HEAD    = "print("
-F_STR_TAIL    = ", end='')"
-F_STR_LF_TAIL = ")"
+F_STR_BEGIN    = "f'''"
+F_STR_END      = "'''"
+
+F_STR_HEAD     = "print((lambda x: x.join("
+F_STR_TAIL     = ".splitlines(True)))({}), end='')"
+F_STR_INDENT   = ">"
+F_STR_HEAD_1   = "print("
+F_STR_TAIL_1   = ", end='')"
+F_STR_TAIL_1LF = ")"
 
 #   ---------------------------------------------------------------------------
 def f_string_decode(input, errors='strict', final=False):
@@ -43,16 +49,16 @@ def f_string_decode(input, errors='strict', final=False):
     f'''string
     '''
     ↓
-    print(f'''string\\
-    ''', end='')
+    print((lambda x: x.join(f'''string\\
+    '''.splitlines(True)))(''), end='')
     -----------------------------------
     f'''
     string
-    '''
+    ''' > indent
     ↓
-    print(f'''
+    print((lambda x: x.join(f'''
     string\\
-    ''', end='')
+    '''.splitlines(True)))(indent), end='')
     -----------------------------------
     f''''''
     ↓
@@ -65,28 +71,40 @@ def f_string_decode(input, errors='strict', final=False):
     for ln in data.splitlines():
         saml = ln.strip()
         if not begun and saml.startswith(F_STR_BEGIN):
+#           -- f'''
             pos = ln.index(F_STR_BEGIN)
             if saml.endswith(F_STR_END, len(F_STR_BEGIN)):
 #               -- a single line string
 #                  interpret an empty string as a line break
-                tail = F_STR_LF_TAIL if saml == F_STR_BEGIN + F_STR_END else F_STR_TAIL
-                result += ln[ :pos] + F_STR_HEAD + ln[pos: ] + tail + '\n'
+                tail = F_STR_TAIL_1LF if saml == F_STR_BEGIN + F_STR_END else F_STR_TAIL_1
+                result += ln[ :pos] + F_STR_HEAD_1 + ln[pos: ] + tail + '\n'
             else:
 #               -- postpone a line break adding
                 result += ln[ :pos] + F_STR_HEAD + ln[pos: ]
                 begun = True
         elif begun:
             if saml.startswith(F_STR_END):
+#               -- '''
                 pos = ln.index(F_STR_END) + len(F_STR_END)
 #               -- escape the latest line break
                 result += '\n' if result.rstrip(' \t').endswith('\\') else '\\\n'
-                result += ln[ :pos] + F_STR_TAIL + ln[pos: ] + '\n'
+                tail = ln[pos: ]
+                indent = "''"
+                if F_STR_INDENT in tail:
+                    pos_indent = tail.index(F_STR_INDENT)
+                    indent = tail[pos_indent + len(F_STR_INDENT): ].strip()
+                    tail = tail[ :pos_indent]
+                result += ln[ :pos] + F_STR_TAIL.format(indent) + tail + '\n'
                 begun = False
             else:
                 result += '\n' + ln
         else:
             result += ln + '\n'
     return result, bytesencoded
+
+#   ---------------------------------------------------------------------------
+def indent(text, indentation=None):
+    return indentation.join(text.splitlines(True)) if indentation else text
 
 #   ---------------------------------------------------------------------------
 def decode(input, errors='strict'):
