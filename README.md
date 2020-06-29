@@ -29,31 +29,31 @@ The sunset for Python 2 has passed.
 f''''''
 
 def dictionary(inst, level=0):
-    o = '    ' * level
+    ಠ_ಠ = '    ' * level
 
     f''' {{
-''' > o
+''' > ಠ_ಠ
 
     for name, val in inst.items():
         if isinstance(val, dict):
             f'''
     {name} =
-''' > o
+''' > ಠ_ಠ
             dictionary(val, level + 1)
         else:
             f'''
     {name} = {val},
-''' > o
+''' > ಠ_ಠ
 
     f'''
 }}
-''' > o
+''' > ಠ_ಠ
 
 decl = {
     'a': 1,
     'b': 2,
     'c': { 'a': 3, 'b': 4 },
-    'd': { 'a': 5, 'b': { 'a': 6, 'b': 7 }, 'c': 8},
+    'd': { 'a': 5, 'b': { 'a': 6, 'b': 7 }, 'c': 8 },
     'e': 9
 }
 
