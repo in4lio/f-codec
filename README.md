@@ -1,6 +1,6 @@
 # Python `f` Codec
 
-Wrap lonesome f-strings in `print()`
+Wrap lonesome f-strings in `print()`.
 
 ## How to install
 
@@ -13,26 +13,41 @@ Wrap lonesome f-strings in `print()`
 ```python
 # -*- coding: f -*-
 
+import sys
+
+f'''
+Python
+'''
+if sys.version_info > (3, 0):
+    f''' {sys.version}
+'''
+else:
+    f'''
+The sunset for Python 2 has passed.
+'''
+
+f''''''
+
 def dictionary(inst, level=0):
-    indent = '    ' * level
+    o = '    ' * level
 
     f''' {{
-''' > indent
+''' > o
 
     for name, val in inst.items():
         if isinstance(val, dict):
             f'''
     {name} =
-''' > indent
+''' > o
             dictionary(val, level + 1)
         else:
             f'''
     {name} = {val},
-''' > indent
+''' > o
 
     f'''
 }}
-''' > indent
+''' > o
 
 decl = {
     'a': 1,
@@ -50,6 +65,9 @@ dictionary(decl)
 
 ```sh
 > python3 test.py
+
+Python 3.7.7 (default, Mar 10 2020, 15:43:33)
+[Clang 11.0.0 (clang-1100.0.33.17)]
 
 decl = {
     a = 1,
