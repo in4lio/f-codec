@@ -28,18 +28,18 @@ The sunset for Python 2 has passed.
 
 f''''''
 
-def dictionary(inst, level=0):
-    ಠ_ಠ = '    ' * level
+def dictionary(inst, depth=0):
+    ಠ_ಠ = '    ' * depth
 
     f''' {{
-''' > ಠ_ಠ
+'''
 
     for name, val in inst.items():
         if isinstance(val, dict):
             f'''
     {name} =
 ''' > ಠ_ಠ
-            dictionary(val, level + 1)
+            dictionary(val, depth + 1)
         else:
             f'''
     {name} = {val},
