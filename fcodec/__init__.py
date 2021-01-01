@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 # Python 'f' Codec
 # Wrap lonesome f-strings in `print()`.
@@ -6,30 +7,28 @@
 """
 # -*- coding: f -*-
 
-import sys
+val = '¯\_(ツ)_/¯'
 
 f'''
-Python
+  {val}
 '''
-if sys.version_info > (3, 0):
-    f''' {sys.version}
-'''
-else:
-    f'''
-The sunset for Python 2 has passed.
+
+f''' {val}
 '''
 
 f'''
-¯\_(ツ)_/¯
-''' > ' ' * 7
+{val}
+{val}
+''' > ' ' * 8
 
 f''''''
 """
 
 import codecs
 from encodings import utf_8
+from io import StringIO
 
-CODEC_NAME  = 'f'
+CODEC_NAME = 'f'
 
 #   ---------------------------------------------------------------------------
 F_STR_BEGIN    = "f'''"
@@ -126,8 +125,9 @@ class IncrementalDecoder(codecs.BufferedIncrementalDecoder):
 
 #   ---------------------------------------------------------------------------
 class StreamReader(codecs.StreamReader):
-    def decode(self, input, errors='strict'):
-        return f_string_decode(input, errors, True)
+    def __init__(self, *args, **kwargs):
+        codecs.StreamReader.__init__( self, *args, **kwargs )
+        self.stream = StringIO(f_string_decode(self.stream.read(), errors, True)[0])
 
 #   ---------------------------------------------------------------------------
 def search_function(coding):
@@ -148,6 +148,6 @@ def search_function(coding):
 codecs.register(search_function)
 
 if __name__ == '__main__':
-    code =__doc__.encode().decode('f')
+    code = __doc__.encode().decode('f')
     print(code)
     exec(code)
