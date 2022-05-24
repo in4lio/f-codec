@@ -69,3 +69,8 @@ decl = {
     e = 9,
 }
 ```
+
+## TODO
+- support for `IncrementalDecoder`
+- skip f-string if the previous line ends with "\" and it isn't a comment
+- skip f-string inside another string

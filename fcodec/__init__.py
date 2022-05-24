@@ -64,7 +64,6 @@ def f_string_decode(input, errors='strict', final=False):
     print(f'''''')
 
     """
-#   TODO: support for IncrementalDecoder
     data, bytesencoded = codecs.utf_8_decode(input, errors, final)
     result = ''
     begun = False
@@ -117,7 +116,7 @@ def decode(input, errors='strict'):
 #   ---------------------------------------------------------------------------
 class IncrementalDecoder(codecs.BufferedIncrementalDecoder):
     def _buffer_decode(self, input, errors, final):
-        if final:
+        if input and final:
             return f_string_decode(input, errors, final)
 
 #       -- "f_string_decode" doesn't support incremental decoding
